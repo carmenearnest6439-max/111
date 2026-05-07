@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>小宇宙内容供给构成 · 2026.04.23–05.07</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+  :root{
+    --bg:#FAF7F2;
+    --bg-2:#F2EDE3;
+    --ink:#1F1B16;
+    --ink-2:#46403A;
+    --muted:#8A8278;
+    --line:#E4DCCE;
+    --brand:#FF5C5C;       /* 小宇宙珊瑚 */
+    --brand-deep:#D93B3B;
+    --accent:#2E5E4E;      /* 墨绿点缀 */
+    --gold:#C8964A;
+    --chip:#FFE9E4;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Inter","Noto Serif SC",-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 36px}
+
+  /* ============ 顶部 Header ============ */
+  .topbar{border-bottom:1px solid var(--line);background:var(--bg)}
+  .topbar-inner{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.04em}
+  .brand-dot{width:10px;height:10px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 3px #FFD9D2}
+  .topbar nav{display:flex;gap:22px;font-size:13px;color:var(--ink-2)}
+  .topbar nav span{cursor:default}
+  .topbar .meta{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+  /* ============ Hero ============ */
+  .hero{padding:72px 0 48px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .hero .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--brand-deep);font-weight:600}
+  .hero .kicker::before{content:"";width:28px;height:1px;background:var(--brand-deep)}
+  .hero h1{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:72px;line-height:1.02;margin:18px 0 18px;letter-spacing:-.01em}
+  .hero h1 em{font-style:italic;color:var(--brand-deep);font-weight:700}
+  .hero .lede{font-family:"Noto Serif SC",serif;font-size:19px;line-height:1.7;color:var(--ink-2);max-width:780px}
+  .hero .byline{margin-top:28px;display:flex;gap:24px;flex-wrap:wrap;font-size:12px;color:var(--muted);letter-spacing:.05em}
+  .hero .byline b{color:var(--ink);font-weight:600}
+
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:48px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .hero-stat{padding:22px 24px;border-right:1px solid var(--line)}
+  .hero-stat:last-child{border-right:none}
+  .hero-stat .lab{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .hero-stat .val{font-family:"Playfair Display",serif;font-weight:900;font-size:38px;color:var(--ink);margin-top:6px;line-height:1;font-variant-numeric:tabular-nums}
+  .hero-stat .val em{color:var(--brand-deep);font-style:normal}
+  .hero-stat .sub{font-size:12px;color:var(--ink-2);margin-top:6px}
+
+  /* ============ 节区通用 ============ */
+  section{padding:80px 0;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:36px}
+  .sec-head .left{max-width:760px}
+  .sec-num{font-family:"Playfair Display",serif;font-style:italic;font-weight:700;font-size:14px;color:var(--brand-deep);letter-spacing:.1em}
+  .sec-title{font-family:"Playfair Display","Noto Serif SC",serif;font-weight:900;font-size:44px;line-height:1.1;margin:8px 0 14px;letter-spacing:-.005em}
+  .sec-desc{font-family:"Noto Serif SC",serif;font-size:15px;color:var(--ink-2);line-height:1.8}
+  .sec-head .right{font-size:12px;color:var(--muted);text-align:right;letter-spacing:.05em;border-left:2px solid var(--brand);padding-left:14px}
+
+  /* card */
+  .card{background:#fff;border:1px solid var(--line);border-radius:2px}
+  .card-pad{padding:24px 26px}
+  .card-title{font-family:"Noto Serif SC",serif;font-weight:600;font-size:15px;color:var(--ink);letter-spacing:.02em}
+  .card-sub{font-size:12px;color:var(--muted);margin-top:4px}
+
+  /* ============ Section 1 ============ */
+  .s1-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:28px}
+  #chart-supply{height:560px}
+  .s1-side{display:flex;flex-direction:column;gap:20px}
+  .pull-quote{background:var(--bg-2);padding:26px 28px;border-left:3px solid var(--brand)}
+  .pull-quote .q{font-family:"Playfair Display",serif;font-style:italic;font-size:26px;line-height:1.35;color:var(--ink);font-weight:700}
+  .pull-quote .q em{color:var(--brand-deep);font-style:italic}
+  .pull-quote .by{margin-top:14px;font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+  .tier-list{display:flex;flex-direction:column}
+  .tier-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px dashed var(--line);font-size:13px}
+  .tier-row:last-child{border-bottom:none}
+  .tier-row .name{display:flex;align-items:center;gap:10px;color:var(--ink)}
+  .tier-row .name .dot{width:6px;height:6px;border-radius:50%}
+  .tier-row .num{font-family:"Playfair Display",serif;font-weight:700;font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .tier-row .pct{font-size:11px;color:var(--muted);margin-left:8px;letter-spacing:.05em}
+
+  /* ============ Section 2 类目展开 ============ */
+  .cat-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;border-bottom:1px solid var(--line);padding-bottom:18px}
+  .cat-tab{font-size:13px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;cursor:pointer;color:var(--ink-2);font-family:"Noto Serif SC",serif;transition:all .18s ease;letter-spacing:.02em}
+  .cat-tab:hover{border-color:var(--brand);color:var(--brand-deep)}
+  .cat-tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .cat-tab .n{font-size:11px;color:var(--muted);margin-left:6px;font-family:Inter,sans-serif;font-variant-numeric:tabular-nums}
+  .cat-tab.active .n{color:#FFD9D2}
+
+  .cat-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;align-items:stretch}
+  #chart-cat{height:520px}
+  .cat-rank{display:flex;flex-direction:column}
+  .cat-rank-head{display:flex;justify-content:space-between;align-items:baseline;padding:0 0 14px;border-bottom:2px solid var(--ink)}
+  .cat-rank-head .t{font-family:"Noto Serif SC",serif;font-weight:600;font-size:18px}
+  .cat-rank-head .s{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+  .rank-row{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .rank-row .idx{font-family:"Playfair Display",serif;font-style:italic;font-weight:700;color:var(--brand-deep);font-size:16px;text-align:right;font-variant-numeric:tabular-nums}
+  .rank-row .nm{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rank-row .vs{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+  .rank-row .sub{font-family:"Playfair Display",serif;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .rank-row .play{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .rank-row.top1 .nm{font-weight:600}
+  .rank-row.top1 .idx{font-size:20px}
+
+  .cat-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:24px;background:var(--bg-2);border:1px solid var(--line)}
+  .cat-meta .m{padding:18px 22px;border-right:1px solid var(--line)}
+  .cat-meta .m:last-child{border-right:none}
+  .cat-meta .lb{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+  .cat-meta .vl{font-family:"Playfair Display",serif;font-weight:900;font-size:26px;margin-top:6px;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .cat-meta .vl em{color:var(--brand-deep);font-style:normal}
+  .cat-meta .nt{font-size:11px;color:var(--ink-2);margin-top:4px}
+
+  /* ============ Section 3 综合 ============ */
+  .s3-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  #chart-top-play{height:560px}
+  #chart-efficiency{height:560px}
+
+  /* ============ Section 4 矩阵 ============ */
+  #chart-matrix{height:780px}
+
+  /* ============ 结尾 ============ */
+  .findings{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px}
+  .finding{background:#fff;border:1px solid var(--line);padding:30px 28px;position:relative}
+  .finding .no{font-family:"Playfair Display",serif;font-style:italic;font-weight:700;color:var(--brand-deep);font-size:13px;letter-spacing:.1em}
+  .finding h3{font-family:"Noto Serif SC",serif;font-weight:600;font-size:20px;line-height:1.4;margin:8px 0 14px;color:var(--ink)}
+  .finding p{font-family:"Noto Serif SC",serif;font-size:14px;color:var(--ink-2);line-height:1.85;margin:0}
+  .finding .tag{display:inline-block;background:var(--chip);color:var(--brand-deep);font-size:11px;padding:3px 10px;border-radius:2px;margin-top:14px;letter-spacing:.05em}
+
+  footer{padding:40px 0 60px;font-size:12px;color:var(--muted);letter-spacing:.05em}
+  footer .ft{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:24px}
+
+  @media (max-width:1000px){
+    .s1-grid,.cat-grid,.s3-grid,.findings{grid-template-columns:1fr}
+    .hero h1{font-size:48px}
+    .sec-title{font-size:32px}
+    .hero-stats,.cat-meta{grid-template-columns:repeat(2,1fr)}
+    .hero-stat:nth-child(2),.cat-meta .m:nth-child(2){border-right:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="brand"><span class="brand-dot"></span><span>XIAOYUZHOU · CONTENT INTELLIGENCE</span></div>
+    <nav>
+      <span>供给量</span><span>类目热门</span><span>头部对比</span><span>类目分布</span>
+    </nav>
+    <div class="meta">ISSUE 01 · APR–MAY 2026</div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">PODCAST MARKET · CONTENT SUPPLY</div>
+    <h1>小宇宙<em>内容供给</em>构成</h1>
+    <p class="lede">本报告整理了两组数据：一是 2026.04.23–04.30 一周内 19 个频道分类的新增播客数量；二是截至 2026.05.07 各类目"频道近期热门"中的 10 档播客的订阅量与最新三期单集播放量（已剔除付费集）。</p>
+    <div class="byline">
+      <span><b>RESEARCH</b> · 内容供给构成</span>
+      <span><b>SOURCE</b> · 小宇宙 App 公开榜单</span>
+      <span><b>SAMPLE</b> · 1,080 档新增 + 190 档头部</span>
+      <span><b>UPDATED</b> · 2026.05.07</span>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="lab">一周新增播客</div>
+        <div class="val"><em>1,080</em></div>
+        <div class="sub">2026.04.23 – 04.30 · 19 个频道</div>
+      </div>
+      <div class="hero-stat">
+        <div class="lab">最大供给类目</div>
+        <div class="val">自我成长</div>
+        <div class="sub">单周新增 <b>246</b> 档 · 占比 22.8%</div>
+      </div>
+      <div class="hero-stat">
+        <div class="lab">头部样本订阅总和</div>
+        <div class="val">5,940<span style="font-size:18px">万</span></div>
+        <div class="sub">19 类目 × 各 Top10 加总</div>
+      </div>
+      <div class="hero-stat">
+        <div class="lab">单期最高播放</div>
+        <div class="val"><em>319</em><span style="font-size:18px">万</span></div>
+        <div class="sub">岩中花述 · 社会类</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ Section 1 ============ -->
+<section id="sec1">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <div class="sec-num">— Chapter 01</div>
+        <div class="sec-title">一周新增播客的类目分布</div>
+        <div class="sec-desc">2026.04.23–04.30 一周内，小宇宙 19 个频道分类合计新增播客 1,080 档。其中自我成长 246 档、趣味闲谈 179 档、治愈陪伴 101 档，三类合计 526 档，占整周新增的 48.7%；其余 16 个类目新增之和约 554 档，单类目大多在 50 档以下。</div>
+      </div>
+      <div class="right">数据口径<br/>2026.04.23 – 04.30 · 频道维度</div>
+    </div>
+
+    <div class="s1-grid">
+      <div class="card card-pad">
+        <div class="card-title">19 个频道一周新增播客数量</div>
+        <div class="card-sub">单位：档 · 红色 = 一周新增 ≥ 100，灰色 = 其余类目</div>
+        <div id="chart-supply"></div>
+      </div>
+      <div class="s1-side">
+        <div class="pull-quote">
+          <div class="q">三强类目 <em>合计 526 档</em>，占整周新增的 <em>48.7%</em>；最后 10 个类目合计不足 200 档。</div>
+          <div class="by">— Supply Distribution</div>
+        </div>
+        <div class="card card-pad">
+          <div class="card-title">类目梯队</div>
+          <div class="card-sub">按周新增数量分为四档</div>
+          <div class="tier-list" id="tier-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Section 2 类目展开 ============ -->
+<section id="sec2">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <div class="sec-num">— Chapter 02</div>
+        <div class="sec-title">各类目热门播客表现</div>
+        <div class="sec-desc">点击下方任一类目标签，散点图展示该类目 10 档头部播客的 <b>订阅量 × 最新三期平均播放量</b> 分布；右侧表格按最新三期平均播放量倒序排列。</div>
+      </div>
+      <div class="right">数据口径<br/>2026.05.07 频道近期热门 · 已剔除付费集</div>
+    </div>
+
+    <div class="cat-tabs" id="cat-tabs"></div>
+
+    <div class="cat-grid">
+      <div class="card card-pad">
+        <div class="card-title" id="cat-chart-title">商业 · 订阅量 vs 平均播放量</div>
+        <div class="card-sub">气泡大小 = 最新三期平均播放量 · 双对数坐标</div>
+        <div id="chart-cat"></div>
+      </div>
+      <div>
+        <div class="cat-rank-head">
+          <div class="t" id="cat-rank-title">商业 · 头部 Top10 排行</div>
+          <div class="s">BY AVG PLAYS</div>
+        </div>
+        <div id="cat-rank"></div>
+      </div>
+    </div>
+
+    <div class="cat-meta" id="cat-meta"></div>
+  </div>
+</section>
+
+<!-- ============ Section 3 综合 ============ -->
+<section id="sec3">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <div class="sec-num">— Chapter 03</div>
+        <div class="sec-title">跨类目头部播客对比</div>
+        <div class="sec-desc">把 19 个类目的头部样本合并到同一坐标下，分别按"最新三期平均播放量"和"播放/订阅转化率"两个口径排序。</div>
+      </div>
+      <div class="right">样本：19 类目 × 各 10 档</div>
+    </div>
+
+    <div class="s3-grid">
+      <div class="card card-pad">
+        <div class="card-title">最新三期平均播放量 · 全类目 Top 20</div>
+        <div class="card-sub">条形长度 = 平均播放量 · 颜色 = 所属类目</div>
+        <div id="chart-top-play"></div>
+      </div>
+      <div class="card card-pad">
+        <div class="card-title">单订阅播放转化率 · Top 15</div>
+        <div class="card-sub">= 最新三期平均播放量 ÷ 订阅量 · 仅取订阅 ≥ 1万 的样本</div>
+        <div id="chart-efficiency"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Section 4 矩阵 ============ -->
+<section id="sec4">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <div class="sec-num">— Chapter 04</div>
+        <div class="sec-title">19 个类目的订阅量与播放量分布</div>
+        <div class="sec-desc">横轴为该类目头部样本订阅量中位数，纵轴为该类目头部样本最新三期平均播放量中位数，气泡大小表示一周新增播客数量。</div>
+      </div>
+      <div class="right">中位数口径 · 双对数坐标</div>
+    </div>
+
+    <div class="card card-pad">
+      <div class="card-title">类目分布 · 订阅量 × 播放量 × 一周新增</div>
+      <div class="card-sub">横轴 = 订阅量中位数 · 纵轴 = 平均播放量中位数 · 气泡大小 = 一周新增数量</div>
+      <div id="chart-matrix"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap ft">
+    <div>© 2026 Xiaoyuzhou Content Intelligence · 内部研究使用</div>
+    <div>数据来源：小宇宙 App 频道页 · 抓取于 2026.04.23 – 2026.05.07</div>
+  </div>
+</footer>
+
+<script>
+/* =============== 数据 =============== */
+const supplyData = [
+  {name:'自我成长', count:246},
+  {name:'趣味闲谈', count:179},
+  {name:'治愈陪伴', count:101},
+  {name:'商业',     count:98 },
+  {name:'人文',     count:75 },
+  {name:'阅读',     count:59 },
+  {name:'社会',     count:41 },
+  {name:'科技',     count:40 },
+  {name:'影视娱乐', count:38 },
+  {name:'故事奇谈', count:35 },
+  {name:'职业探索', count:34 },
+  {name:'体育运动', count:28 },
+  {name:'音乐',     count:22 },
+  {name:'医疗健康', count:20 },
+  {name:'文旅',     count:14 },
+  {name:'饮食',     count:14 },
+  {name:'艺术',     count:13 },
+  {name:'兴趣生活', count:13 },
+  {name:'动漫游戏', count:10 },
+];
+
+// 各类目头部 Top10：[name, subs, e1, e2, e3]
+const hotData = {
+'商业': [
+  ['商业早8点',29902,4757,6891,8671],
+  ['声动早咖啡',1803367,101000,171000,179000],
+  ['富女孩宝典',133370,28000,47000,46000],
+  ['知行小酒馆',1896993,231000,182000,310000],
+  ['起朱楼宴宾客',391953,57000,48000,81000],
+  ['摸鱼早报',72126,7362,11000,15000],
+  ['面基',616202,13000,83000,93000],
+  ['我是你的眼，带你领略股市的变化',59446,13000,19000,13000],
+  ['半拿铁 | 商业沉浮录',796086,15000,71000,89000],
+  ['高能量',258770,12000,33000,19000],
+],
+'自我成长': [
+  ['搞钱女孩',1020077,53000,58000,47000],
+  ['谭立人',633829,688000,672000,280000],
+  ['天真不天真',2539081,280000,647000,230000],
+  ['钱婧老师的会客厅',640143,113000,152000,115000],
+  ['燕外之意',545407,107000,151000,115000],
+  ['自我进化论',2090129,1401000,413000,1441000],
+  ['无人知晓',1692914,793000,378000,616000],
+  ['自习室 STUDY ROOM',635663,97000,256000,197000],
+  ['心都野了Heartbeast',366121,113000,90000,241000],
+  ['你，静不下来',205142,45000,159000,82000],
+],
+'社会': [
+  ['不合时宜',546076,17000,33000,15000],
+  ['岩中花述',3807114,1370000,2165000,3190000],
+  ['声东击西',770065,29000,53000,84000],
+  ['路径依赖',13899,3294,20000,4751],
+  ['西西弗高速',1204027,407000,612000,446000],
+  ['灰度纪年',104195,22000,30000,8814],
+  ['正文三台',59530,13000,60000,22000],
+  ['资讯早7点',269431,32000,50000,60000],
+  ['热可可',78524,22000,22000,80000],
+  ['严肃喧哗',70761,3228,6220,5381],
+],
+'故事奇谈': [
+  ['TSP怪奇档案',206208,21000,44000,25000],
+  ['落日之后',165419,36000,89000,87000],
+  ['鲶鱼夜话',97098,16000,24000,32000],
+  ['入夜电波',34047,9940,21000,33000],
+  ['黑猫侦探社',356856,68000,118000,148000],
+  ['霓达播客',627491,358000,422000,403000],
+  ['故事FM',536465,22000,51000,31000],
+  ['不吱声',98900,50000,86000,82000],
+  ['重重电波',190810,67000,153000,153000],
+  ['灯下黑radio',49795,14000,30000,57000],
+],
+'人文': [
+  ['历史学人',146558,14000,8435,33000],
+  ['野史下酒 | 有趣的历史故事',166516,7552,13000,16000],
+  ['洪晃播客自传 | 歪打正着',178201,15000,21000,22000],
+  ['随机波动 StochasticVolatility',1014685,31000,103000,19000],
+  ['忽左忽右',1165319,19000,71000,55000],
+  ['龟山乡',55906,69000,21000,25000],
+  ['游荡集',218569,16000,30000,23000],
+  ['独树不成林',808092,25000,28000,34000],
+  ['山有虎',23786,14000,2671,3660],
+  ['东腔西调',539754,25000,31000,46000],
+],
+'科技': [
+  ['屠龙之术',53233,1493,6771,3754],
+  ['张小珺Jun | 商业访谈录',238876,29000,85000,32000],
+  ['TIANYU2FM - 对谈未知领域',200111,17000,59000,47000],
+  ['跨国串门儿计划',54994,1444,1559,1286],
+  ['硅谷101',535378,32000,39000,33000],
+  ['罗永浩的十字路口',348928,398000,166000,108000],
+  ['百车全说 | 别人研究车，而我研究你',24596,6792,12000,15000],
+  ['十字路口Crossing',108597,7102,18000,6990],
+  ['乱翻书',313122,27000,40000,10000],
+  ["What's Next | 科技早知道",328442,13000,8714,15000],
+],
+'阅读': [
+  ['文化有限',1421285,30000,48000,109000],
+  ['周小辣的播客',31982,12000,16000,22000],
+  ['纵横四海',1628216,171000,354000,447000],
+  ['铿锵100分钟了',32146,3252,5550,5482],
+  ['银杏树下',190800,3335,3400,6760],
+  ['这个月的播客',145259,15000,31000,37000],
+  ['蒋方舟·一寸',232936,35000,31000,67000],
+  ['夜夜页页',24828,54000,5772,2528],
+  ['姐姐好读sisreads',218563,13000,67000,28000],
+  ['蜜罐吃书',440931,12000,48000,30000],
+],
+'趣味闲谈': [
+  ['二的三次方',131505,94000,118000,115000],
+  ['三个火呛手',337583,122000,73000,169000],
+  ['得体广播站',26937,31000,58000,58000],
+  ['不开玩笑 Jokes Aside',537867,268000,66000,243000],
+  ['姜思达',550676,71000,74000,76000],
+  ['无聊斋',840241,95000,67000,52000],
+  ['凹凸电波',1869059,112000,297000,276000],
+  ['正经叭叭',362408,99000,157000,79000],
+  ['谐星聊天会',744606,265000,277000,270000],
+  ['三言两语 | 脱口秀演员闲谈录',130498,55000,77000,75000],
+],
+'医疗健康': [
+  ['菠萝健康派',82711,6527,16000,18000],
+  ['美业Ken大瓜',55231,3208,6267,4002],
+  ['这病说来话长',203846,8734,15000,13000],
+  ['碳基生物生存指南',113251,36000,58000,12000],
+  ['万物生长FM',98934,3883,5611,35000],
+  ['下班医生',42877,3802,5981,11000],
+  ['药不能停',67618,2500,11000,6702],
+  ['当个事儿',155540,1836,3000,7011],
+  ['推心置腹',140686,4629,15000,24000],
+  ['千金要方',121116,16000,21000,30000],
+],
+'影视娱乐': [
+  ['电影不无聊',95906,13000,7274,3083],
+  ['快乐亚军runner-up',133101,56000,41000,81000],
+  ['千梦群岛',41410,13000,17000,20000],
+  ['硬核说',84928,45000,9976,8944],
+  ['仙境之桥 | 动漫影视游戏文化和欢乐的我们',30991,13000,5777,8506],
+  ['展开讲讲',544284,64000,74000,110000],
+  ['疲惫娇娇 CyberPink',80166,3952,8380,13000],
+  ['电影巨辩',137962,22000,8958,11000],
+  ['黑水公园',164418,18000,33000,23000],
+  ['散场通道 | 关于电影的一切',55563,6135,6307,2645],
+],
+'文旅': [
+  ['壮游者 | 人文旅行声音游记',138909,7759,12000,14000],
+  ['周休三日',3944,8586,739,956],
+  ['来去泉州（购买才可收听）',35465,4191,5967,9036],
+  ['海鸥公园',22233,2139,5633,1793],
+  ['日本浮游',31679,12000,10000,8837],
+  ['稻此一游',43008,3285,2406,23000],
+  ['OpenDoor',12609,692,1981,31000],
+  ['城市有意思',13887,939,1940,32000],
+  ['午夜飞行 VOL DE NUIT',75106,2495,2979,2321],
+  ['非正常旅行',70817,2006,50000,4414],
+],
+'治愈陪伴': [
+  ['思文，败类',1214489,123000,360000,239000],
+  ['喷嚏',377034,92000,128000,188000],
+  ['陶白白白说了',114411,7357,15000,20000],
+  ['肥话连篇',668321,122000,189000,275000],
+  ['fit4life | fitgirl weekly chat',289835,44000,53000,59000],
+  ['宁浪别野',130984,35000,55000,38000],
+  ['松茸的世界 | 正念冥想',203223,3280,2641,11000],
+  ['嗨咻',310229,72000,71000,93000],
+  ['滑滑梯Play on the slide',54632,5203,13000,15000],
+  ['睡个好觉FM | 正念声音疗愈 | 助眠冥想',63919,5181,5228,3058],
+],
+'职业探索': [
+  ['追光北极星',1241,615,1297,1409],
+  ['身边人',79981,5696,5549,4505],
+  ['姜就一下',23033,1558,1058,844],
+  ['公司茶水间',115407,12000,16000,14000],
+  ['Tiger Legal Talks',46399,5521,10000,6730],
+  ['鹅厂wo谈会',26662,8467,21000,23000],
+  ['不止牛马',14294,1056,1313,2276],
+  ['体制内 | 小职员们的聊天局',196186,3835,8386,7504],
+  ['组织进化论',304535,25000,41000,89000],
+  ['识人识己',121035,2717,2936,2308],
+],
+'饮食': [
+  ['津津有味',91626,8844,39000,15000],
+  ['世界好好吃',60946,6229,8160,10000],
+  ['好好吃饭~',62469,9890,4558,8163],
+  ['厨此以外',111748,49000,17000,23000],
+  ['七分饱',27499,1803,2247,5191],
+  ['鲸鱼赫兹',69449,3211,6304,4358],
+  ['CoffeePlus播客',57409,11000,10000,8449],
+  ['排排坐吃果果',7397,4374,6300,1555],
+  ['大食话',68155,5926,5026,6039],
+  ['吃里扒外',30399,2023,2103,5201],
+],
+'艺术': [
+  ['听起来不错！',15025,2842,2191,22000],
+  ['念念敦煌',17866,6096,25000,4722],
+  ['艺术折叠',17324,640,947,1259],
+  ['接触印相 Contact Sheets',17712,1291,2302,3621],
+  ['博物志',138824,47000,8368,14000],
+  ['白衣刷展',16233,694,1016,2712],
+  ['怀炉写真机KarioCamera',10826,528,2027,1334],
+  ['曝光补偿',6781,955,2825,2293],
+  ['Photo Reason',44997,1388,3109,1355],
+  ['剧谈社 | 翻译艺术品',200617,32000,50000,66000],
+],
+'体育运动': [
+  ['体坛篮球秀',10368,5250,3964,2431],
+  ['观篮高手NBA',6992,1181,1404,1465],
+  ['记意电波',3806,1541,2018,2188],
+  ['迪谈盖论',8626,1994,2941,2746],
+  ['马刺进步报告',2201,1180,601,1477],
+  ['信口开合·跑步播客',12358,8687,3585,5007],
+  ['透一透',43766,82000,15000,7003],
+  ['两杆老步枪 My Ars',10328,3458,3272,3885],
+  ['飞驰圈 | F1复盘',18440,4572,6029,21000],
+  ['篮球昕事',6155,2350,2166,2495],
+],
+'兴趣生活': [
+  ['胡叨叨',15302,10000,1644,1660],
+  ['美妆老友记',46920,11000,3482,2662],
+  ['about热水频道',133482,13000,8337,9182],
+  ['步可思议',3736,439,1003,1860],
+  ['山合作用',16312,1570,1800,2561],
+  ['言之有季',79309,74000,37000,21000],
+  ['苦中找乐',7995,353,959,742],
+  ['Nice Try',152374,6432,33000,24000],
+  ['莎士不用比呀 | Not So Bard',32150,2765,4034,4606],
+  ['处处闻啼鸟',11228,4481,1911,2033],
+],
+'音乐': [
+  ['一听就困 | ASMR助眠',3162,275,406,553],
+  ['Why for Jazz',34521,5994,1399,3990],
+  ['共鸣音乐ResoMusic',59436,15000,8926,13000],
+  ['咕·独玩家',3511,12000,598,530],
+  ['野声宝库',42712,6251,6138,8762],
+  ['音乐进化论 MusicEvolution',19268,1048,7450,47000],
+  ['Vibration歪波音室',273979,16000,14000,24000],
+  ['音符漫溢茶话会',9868,860,1988,2344],
+  ['永远年轻音乐磁带',17120,3009,4810,3390],
+  ['响声播客',43479,1414,861,3298],
+],
+'动漫游戏': [
+  ['走神大师',5991,697,909,931],
+  ['3T电波',2564,686,1997,1555],
+  ['普通玩家 | Common Player',14068,1077,705,1993],
+  ['机核游戏频道',91340,2591,3038,4771],
+  ['手动存档',6956,271,2237,1176],
+  ['游戏章鱼',2716,352,323,580],
+  ['超级游文化',36261,5475,12000,19000],
+  ['405游局',9215,1262,1783,1280],
+  ['大人的任意门',22363,2035,14000,3619],
+  ['菠萝油子 | 成年人听的动漫播客',53159,1314,3221,4010],
+],
+};
+
+/* =============== 工具函数 =============== */
+const supplyMap = Object.fromEntries(supplyData.map(d=>[d.name,d.count]));
+const fmt = n => n>=10000 ? (n/10000).toFixed(n>=1000000?0:1).replace(/\.0$/,'')+'万' : n.toLocaleString();
+const fmtShort = n => n>=1000000 ? (n/1000000).toFixed(2)+'M' : n>=1000 ? (n/1000).toFixed(0)+'k' : n;
+const median = arr => {const s=[...arr].sort((a,b)=>a-b);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2};
+
+// 给每条播客加上 avg
+Object.values(hotData).forEach(arr=>arr.forEach(r=>r[5]=Math.round((r[2]+r[3]+r[4])/3)));
+
+// 类目色板（柔和调色）
+const palette = ['#FF5C5C','#E8924A','#D4A24C','#7AA84A','#3FA37A','#3E9AB0','#5079C2','#8366C7','#C460A8','#D14B6E','#A0552D','#5E8A5E','#3F6E96','#946BB0','#B8434E','#8E6F3A','#4F8985','#6E4E8A','#9E4848'];
+const catColor = {};
+supplyData.forEach((d,i)=>catColor[d.name]=palette[i%palette.length]);
+
+/* =============== Section 1: 供给量 =============== */
+(function(){
+  const top3 = ['自我成长','趣味闲谈','治愈陪伴'];
+  const chart = echarts.init(document.getElementById('chart-supply'));
+  const opt = {
+    grid:{left:90,right:60,top:10,bottom:30},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#fff',borderColor:'#E4DCCE',textStyle:{color:'#1F1B16'}},
+    xAxis:{type:'value',axisLine:{lineStyle:{color:'#C8BFB0'}},splitLine:{lineStyle:{color:'#EFE9DD'}},axisLabel:{color:'#8A8278'}},
+    yAxis:{type:'category',data:[...supplyData].reverse().map(d=>d.name),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'#1F1B16',fontSize:13,fontFamily:'Noto Serif SC'}},
+    series:[{
+      type:'bar',
+      data:[...supplyData].reverse().map(d=>({
+        value:d.count,
+        itemStyle:{color:top3.includes(d.name)?'#FF5C5C':'#C8BFB0',borderRadius:[0,2,2,0]}
+      })),
+      barWidth:18,
+      label:{show:true,position:'right',color:'#1F1B16',fontWeight:600,fontFamily:'Playfair Display',fontSize:13,formatter:'{c}'}
+    }]
+  };
+  chart.setOption(opt);
+  window.addEventListener('resize',()=>chart.resize());
+
+  // tier list
+  const tiers = [
+    {label:'巨头档（≥150）',color:'#FF5C5C',list:supplyData.filter(d=>d.count>=150)},
+    {label:'主力档（50–149）',color:'#E8924A',list:supplyData.filter(d=>d.count>=50&&d.count<150)},
+    {label:'腰部档（20–49）',color:'#7AA84A',list:supplyData.filter(d=>d.count>=20&&d.count<50)},
+    {label:'长尾档（<20）',color:'#A8A096',list:supplyData.filter(d=>d.count<20)},
+  ];
+  const total = supplyData.reduce((s,d)=>s+d.count,0);
+  const tierEl = document.getElementById('tier-list');
+  tierEl.innerHTML = tiers.map(t=>{
+    const sum = t.list.reduce((s,d)=>s+d.count,0);
+    const names = t.list.map(d=>d.name).join('、');
+    return `<div class="tier-row">
+      <div class="name"><span class="dot" style="background:${t.color}"></span>${t.label}<span class="pct" title="${names}">${t.list.length} 个类目</span></div>
+      <div><span class="num">${sum}</span><span class="pct">${(sum/total*100).toFixed(1)}%</span></div>
+    </div>`;
+  }).join('');
+})();
+
+/* =============== Section 2: 类目透视 =============== */
+(function(){
+  const tabsEl = document.getElementById('cat-tabs');
+  const cats = supplyData.map(d=>d.name);
+  tabsEl.innerHTML = cats.map((c,i)=>`<button class="cat-tab${i===0?' active':''}" data-cat="${c}">${c}<span class="n">${supplyMap[c]||0}</span></button>`).join('');
+
+  const chart = echarts.init(document.getElementById('chart-cat'));
+  function render(cat){
+    const list = hotData[cat] || [];
+    document.getElementById('cat-chart-title').textContent = `${cat} · 订阅量 vs 平均播放量`;
+    document.getElementById('cat-rank-title').textContent = `${cat} · 头部 Top10 排行`;
+
+    // scatter
+    const data = list.map(r=>({
+      name:r[0],
+      value:[Math.max(r[1],100),Math.max(r[5],100),r[5]],
+    }));
+    const maxAvg = Math.max(...list.map(r=>r[5]));
+    chart.setOption({
+      grid:{left:70,right:30,top:30,bottom:50},
+      tooltip:{trigger:'item',backgroundColor:'#fff',borderColor:'#E4DCCE',textStyle:{color:'#1F1B16'},
+        formatter:p=>`<b>${p.data.name}</b><br/>订阅 ${fmt(p.data.value[0])}<br/>平均播放 ${fmt(p.data.value[1])}`},
+      xAxis:{type:'log',name:'订阅量',nameLocation:'middle',nameGap:32,nameTextStyle:{color:'#8A8278'},
+        axisLine:{lineStyle:{color:'#C8BFB0'}},splitLine:{lineStyle:{color:'#EFE9DD',type:'dashed'}},
+        axisLabel:{color:'#8A8278',formatter:v=>fmt(v)}},
+      yAxis:{type:'log',name:'平均播放量',nameLocation:'middle',nameGap:50,nameTextStyle:{color:'#8A8278'},
+        axisLine:{lineStyle:{color:'#C8BFB0'}},splitLine:{lineStyle:{color:'#EFE9DD',type:'dashed'}},
+        axisLabel:{color:'#8A8278',formatter:v=>fmt(v)}},
+      series:[{
+        type:'scatter',data,
+        symbolSize:v=>Math.max(12,Math.sqrt(v[2])/Math.sqrt(maxAvg)*48),
+        itemStyle:{color:catColor[cat],opacity:.78,borderColor:'#fff',borderWidth:1.5,
+          shadowColor:'rgba(0,0,0,.08)',shadowBlur:6},
+        label:{show:true,position:'top',formatter:p=>p.data.name,color:'#1F1B16',fontSize:11,fontFamily:'Noto Serif SC'},
+        emphasis:{itemStyle:{opacity:1,borderWidth:2}}
+      }]
+    },true);
+
+    // rank
+    const sorted = [...list].sort((a,b)=>b[5]-a[5]);
+    document.getElementById('cat-rank').innerHTML = sorted.map((r,i)=>`
+      <div class="rank-row${i===0?' top1':''}">
+        <div class="idx">${i+1}</div>
+        <div class="nm" title="${r[0]}">${r[0]}</div>
+        <div class="vs">
+          <div class="sub">${fmt(r[1])}</div>
+          <div class="play">avg ${fmt(r[5])}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // meta
+    const subsArr=list.map(r=>r[1]), avgArr=list.map(r=>r[5]);
+    const supply = supplyMap[cat]||0;
+    const topPod = sorted[0];
+    document.getElementById('cat-meta').innerHTML = `
+      <div class="m"><div class="lb">一周新增</div><div class="vl"><em>${supply}</em></div><div class="nt">04.23–04.30 新上架</div></div>
+      <div class="m"><div class="lb">订阅中位数</div><div class="vl">${fmt(median(subsArr))}</div><div class="nt">头部样本中位数</div></div>
+      <div class="m"><div class="lb">单期播放中位数</div><div class="vl">${fmt(median(avgArr))}</div><div class="nt">最新三期均值</div></div>
+      <div class="m"><div class="lb">类目头牌</div><div class="vl" style="font-size:18px;font-family:'Noto Serif SC';font-weight:600">${topPod[0]}</div><div class="nt">avg ${fmt(topPod[5])}</div></div>
+    `;
+  }
+  render('商业');
+  tabsEl.addEventListener('click',e=>{
+    const t = e.target.closest('.cat-tab'); if(!t) return;
+    tabsEl.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+    t.classList.add('active');
+    render(t.dataset.cat);
+  });
+  window.addEventListener('resize',()=>chart.resize());
+})();
+
+/* =============== Section 3: 综合 Top20 + 转化率 =============== */
+(function(){
+  // 汇总所有播客
+  const all = [];
+  Object.entries(hotData).forEach(([cat,arr])=>arr.forEach(r=>all.push({cat,name:r[0],subs:r[1],avg:r[5]})));
+
+  // Top 20 by avg
+  const top20 = [...all].sort((a,b)=>b.avg-a.avg).slice(0,20).reverse();
+  const c1 = echarts.init(document.getElementById('chart-top-play'));
+  c1.setOption({
+    grid:{left:160,right:50,top:10,bottom:30},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#fff',borderColor:'#E4DCCE',textStyle:{color:'#1F1B16'},
+      formatter:p=>{const d=top20[p[0].dataIndex];return `<b>${d.name}</b><br/>类目：${d.cat}<br/>订阅 ${fmt(d.subs)}<br/>平均播放 ${fmt(d.avg)}`}},
+    xAxis:{type:'value',axisLine:{lineStyle:{color:'#C8BFB0'}},splitLine:{lineStyle:{color:'#EFE9DD'}},axisLabel:{color:'#8A8278',formatter:v=>fmt(v)}},
+    yAxis:{type:'category',data:top20.map(d=>d.name),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'#1F1B16',fontSize:11,fontFamily:'Noto Serif SC'}},
+    series:[{
+      type:'bar',barWidth:14,
+      data:top20.map(d=>({value:d.avg,itemStyle:{color:catColor[d.cat],borderRadius:[0,2,2,0]}})),
+      label:{show:true,position:'right',color:'#46403A',fontSize:11,fontFamily:'Inter',formatter:p=>fmt(p.value)+' · '+top20[p.dataIndex].cat}
+    }]
+  });
+  window.addEventListener('resize',()=>c1.resize());
+
+  // 转化率 Top15（订阅≥1万）
+  const eff = all.filter(d=>d.subs>=10000).map(d=>({...d,rate:d.avg/d.subs})).sort((a,b)=>b.rate-a.rate).slice(0,15).reverse();
+  const c2 = echarts.init(document.getElementById('chart-efficiency'));
+  c2.setOption({
+    grid:{left:160,right:60,top:10,bottom:30},
+    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'#fff',borderColor:'#E4DCCE',textStyle:{color:'#1F1B16'},
+      formatter:p=>{const d=eff[p[0].dataIndex];return `<b>${d.name}</b><br/>类目：${d.cat}<br/>订阅 ${fmt(d.subs)}<br/>平均播放 ${fmt(d.avg)}<br/>转化率 ${(d.rate*100).toFixed(1)}%`}},
+    xAxis:{type:'value',axisLine:{lineStyle:{color:'#C8BFB0'}},splitLine:{lineStyle:{color:'#EFE9DD'}},axisLabel:{color:'#8A8278',formatter:v=>(v*100).toFixed(0)+'%'}},
+    yAxis:{type:'category',data:eff.map(d=>d.name),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'#1F1B16',fontSize:11,fontFamily:'Noto Serif SC'}},
+    series:[{
+      type:'bar',barWidth:14,
+      data:eff.map(d=>({value:d.rate,itemStyle:{color:catColor[d.cat],borderRadius:[0,2,2,0]}})),
+      label:{show:true,position:'right',color:'#46403A',fontSize:11,fontFamily:'Inter',formatter:p=>(p.value*100).toFixed(1)+'% · '+eff[p.dataIndex].cat}
+    }]
+  });
+  window.addEventListener('resize',()=>c2.resize());
+})();
+
+/* =============== Section 4: 类目分布矩阵 =============== */
+(function(){
+  const matrix = supplyData.map(d=>{
+    const arr = hotData[d.name]||[];
+    const subs = arr.map(r=>r[1]), plays = arr.map(r=>r[5]);
+    return {
+      name:d.name,
+      supply:d.count,
+      subsMid: arr.length?median(subs):0,
+      playsMid: arr.length?median(plays):0,
+    };
+  }).filter(d=>d.subsMid>0);
+
+  const maxSupply = Math.max(...matrix.map(d=>d.supply));
+  const chart = echarts.init(document.getElementById('chart-matrix'));
+  chart.setOption({
+    grid:{left:90,right:90,top:60,bottom:80},
+    tooltip:{trigger:'item',backgroundColor:'#fff',borderColor:'#E4DCCE',textStyle:{color:'#1F1B16'},
+      formatter:p=>`<b>${p.data.name}</b><br/>一周新增 ${p.data.supply} 档<br/>订阅中位数 ${fmt(p.data.subsMid)}<br/>播放中位数 ${fmt(p.data.playsMid)}`},
+    xAxis:{type:'log',name:'订阅量中位数',nameLocation:'middle',nameGap:38,
+      nameTextStyle:{color:'#46403A',fontSize:13,fontFamily:'Noto Serif SC'},
+      axisLine:{lineStyle:{color:'#C8BFB0'}},splitLine:{lineStyle:{color:'#EFE9DD',type:'dashed'}},
+      axisLabel:{color:'#8A8278',formatter:v=>fmt(v),fontSize:12}},
+    yAxis:{type:'log',name:'最新三期平均播放量中位数',nameLocation:'middle',nameGap:62,
+      nameTextStyle:{color:'#46403A',fontSize:13,fontFamily:'Noto Serif SC'},
+      axisLine:{lineStyle:{color:'#C8BFB0'}},splitLine:{lineStyle:{color:'#EFE9DD',type:'dashed'}},
+      axisLabel:{color:'#8A8278',formatter:v=>fmt(v),fontSize:12}},
+    series:[{
+      type:'scatter',
+      data: matrix.map(d=>({name:d.name,value:[d.subsMid,d.playsMid],supply:d.supply,subsMid:d.subsMid,playsMid:d.playsMid})),
+      symbolSize:d=>{const s=matrix.find(m=>m.subsMid===d[0]&&m.playsMid===d[1]);return Math.max(20,Math.sqrt(s.supply/maxSupply)*58)},
+      itemStyle:{color:p=>catColor[p.data.name],opacity:.55,borderColor:p=>catColor[p.data.name],borderWidth:2,shadowColor:'rgba(0,0,0,.06)',shadowBlur:6},
+      label:{
+        show:true,
+        position:'top',
+        distance:10,
+        formatter:p=>p.data.name,
+        color:'#1F1B16',
+        fontSize:13,
+        fontFamily:'Noto Serif SC',
+        fontWeight:700,
+        backgroundColor:'#FFFFFF',
+        borderColor:'#E4DCCE',
+        borderWidth:1,
+        borderRadius:3,
+        padding:[3,8,3,8]
+      },
+      emphasis:{
+        itemStyle:{opacity:.9,borderWidth:3},
+        label:{
+          color:'#fff',
+          backgroundColor:'#1F1B16',
+          borderColor:'#1F1B16',
+          fontSize:14
+        }
+      },
+      labelLayout:{moveOverlap:'shiftY',hideOverlap:false},
+      z:2
+    }]
+  });
+  window.addEventListener('resize',()=>chart.resize());
+})();
+
+/* =============== Hero 数字校准 =============== */
+(function(){
+  let totalSubs=0;
+  Object.values(hotData).forEach(arr=>arr.forEach(r=>totalSubs+=r[1]));
+  const heroVals = document.querySelectorAll('.hero-stat .val');
+  // 第三个：头部样本订阅总和
+  if(heroVals[2]){
+    heroVals[2].innerHTML = (totalSubs/10000).toFixed(0) + '<span style="font-size:18px">万</span>';
+  }
+})();
+</script>
+
+</body>
+</html>
