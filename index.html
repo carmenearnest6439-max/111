@@ -158,7 +158,7 @@
   <div class="wrap">
     <div class="kicker">PODCAST MARKET · CONTENT SUPPLY</div>
     <h1>小宇宙<em>内容供给</em>构成</h1>
-    <p class="lede">本报告整理了两组数据：一是 2026.04.23–04.30 一周内 19 个频道分类的新增播客数量；二是截至 2026.05.07 各类目"频道近期热门"中的 10 档播客的订阅量与最新三期单集播放量（已剔除付费集）。</p>
+    <p class="lede">本报告整理了两组数据：一是 2026.04.23–04.29 一周内 19 个频道分类的新增播客数量；二是截至 2026.05.07 各类目"频道近期热门"中的 10 档播客的订阅量与最新三期单集播放量（已剔除付费集）。</p>
     <div class="byline">
       <span><b>RESEARCH</b> · 内容供给构成</span>
       <span><b>SOURCE</b> · 小宇宙 App 公开榜单</span>
@@ -170,7 +170,7 @@
       <div class="hero-stat">
         <div class="lab">一周新增播客</div>
         <div class="val"><em>1,080</em></div>
-        <div class="sub">2026.04.23 – 04.30 · 19 个频道</div>
+        <div class="sub">2026.04.23 – 04.29 · 19 个频道</div>
       </div>
       <div class="hero-stat">
         <div class="lab">最大供给类目</div>
@@ -198,9 +198,9 @@
       <div class="left">
         <div class="sec-num">— Chapter 01</div>
         <div class="sec-title">一周新增播客的类目分布</div>
-        <div class="sec-desc">2026.04.23–04.30 一周内，小宇宙 19 个频道分类合计新增播客 1,080 档。其中自我成长 246 档、趣味闲谈 179 档、治愈陪伴 101 档，三类合计 526 档，占整周新增的 48.7%；其余 16 个类目新增之和约 554 档，单类目大多在 50 档以下。</div>
+        <div class="sec-desc">2026.04.23–04.29 一周内，小宇宙 19 个频道分类合计新增播客 1,080 档。其中自我成长 246 档、趣味闲谈 179 档、治愈陪伴 101 档，三类合计 526 档，占整周新增的 48.7%；其余 16 个类目新增之和约 554 档，单类目大多在 50 档以下。</div>
       </div>
-      <div class="right">数据口径<br/>2026.04.23 – 04.30 · 频道维度</div>
+      <div class="right">数据口径<br/>2026.04.23 – 04.29 · 频道维度</div>
     </div>
 
     <div class="s1-grid">
@@ -678,7 +678,7 @@ supplyData.forEach((d,i)=>catColor[d.name]=palette[i%palette.length]);
     const supply = supplyMap[cat]||0;
     const topPod = sorted[0];
     document.getElementById('cat-meta').innerHTML = `
-      <div class="m"><div class="lb">一周新增</div><div class="vl"><em>${supply}</em></div><div class="nt">04.23–04.30 新上架</div></div>
+      <div class="m"><div class="lb">一周新增</div><div class="vl"><em>${supply}</em></div><div class="nt">04.23–04.29 新上架</div></div>
       <div class="m"><div class="lb">订阅中位数</div><div class="vl">${fmt(median(subsArr))}</div><div class="nt">头部样本中位数</div></div>
       <div class="m"><div class="lb">单期播放中位数</div><div class="vl">${fmt(median(avgArr))}</div><div class="nt">最新三期均值</div></div>
       <div class="m"><div class="lb">类目头牌</div><div class="vl" style="font-size:18px;font-family:'Noto Serif SC';font-weight:600">${topPod[0]}</div><div class="nt">avg ${fmt(topPod[5])}</div></div>
